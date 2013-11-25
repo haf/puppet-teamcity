@@ -65,7 +65,7 @@ class teamcity::server(
     before     => Anchor['teamcity::server::end'],
   }
 
-  firewall { "101 allow tc-connectionss:8111":
+  firewall { "101 allow tc-connections:8111":
     proto   => 'tcp',
     state   => ['NEW'],
     dport   => 8111,
