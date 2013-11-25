@@ -1,0 +1,49 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: <%= @service %>
+# Required-Start: $local_fs $remote_fs $syslog $network
+# Required-Stop: $local_fs $remote_fs $syslog $network
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: TeamCity Build Agent
+# Description: TeamCity Build Agent
+### END INIT INFO
+
+set -e
+
+PATH=/sbin:/bin:/usr/bin
+USER=<%= @user %>
+SCRIPT=/home/<%= @user %>/buildAgent/bin/agent.sh
+NAME=<%= @service %>
+PIDFILE=/home/<%= @user %>/buildAgent/logs/buildAgent.pid
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+        sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
+        ;;
+    stop)
+        sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
+        ;;
+    force-reload)
+        sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
+        sleep 2
+        sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
+        ;;
+    restart)
+        sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
+        sleep 2
+        sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
+        ;;
+    status)
+        status_of_proc -p $PIDFILE $SCRIPT $NAME
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|force-reload|status}"
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,62 @@
+#! /bin/bash
+# chkconfig: - 10 90
+# /etc/init.d/teamcity-server
+#
+
+USER=<%= @user %>
+export TEAMCITY_DATA_PATH='<%= @data_dir %>'
+export TEAMCITY_SERVER_OPTS='<%= @server_opts %>'
+export TEAMCITY_SERVER_MEM_OPTS='<%= @server_mem_opts %>'
+export TEAMCITY_DIR='<%= @home_dir %>'
+export CATALINA_HOME='<%= @home_dir %>'
+export CATALINA_BASE='<%= @home_dir %>'
+export CATALINA_OUT='<%= @catalina_log %>'
+
+# if using the below:
+# ERROR -  jetbrains.buildServer.STARTUP - The Data Directory contains files or directories that don't belong to TeamCity. 
+# export CATALINA_TMPDIR='<%= @catalina_tmp %>'
+
+# if using the below:
+# /opt/teamcity-server/bin/catalina.sh: line 400: /var/run/catalina.pid: Permission denied  
+# export CATALINA_PID='<%= @catalina_pid %>'
+
+export CATALINA_OPTS="<%= @server_opts %> -server $TEAMCITY_SERVER_MEM_OPTS \
+ -Dlog4j.configuration=\"file:<%= @conf_dir %>/teamcity-server-log4j.xml\" \
+ -Dteamcity_logs=<%= @log_dir %> -Djava.awt.headless=true"
+export LOGGING_CONFIG="-Djava.util.logging.config.file=<%= @conf_dir %>/logging.properties"
+
+# source teamcity-specific config
+[ -e /etc/sysconfig/teamcity ] && . /etc/sysconfig/teamcity
+
+start() {
+  echo "starting teamcity-server"
+  su -s /bin/bash -c "$TEAMCITY_DIR/bin/catalina.sh start" $USER
+}
+
+stop() {
+  echo "stopping teamcity-server"
+  su -s /bin/bash -c "$TEAMCITY_DIR/bin/catalina.sh stop" $USER
+}
+ 
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    start
+    RETVAL=$?
+    ;;
+  stop)
+    stop
+    RETVAL=$?
+    ;;
+  restart)
+    start
+    stop
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+ 
+exit $RETVAL
