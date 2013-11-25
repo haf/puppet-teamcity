@@ -13,37 +13,30 @@ set -e
 
 PATH=/sbin:/bin:/usr/bin
 USER=<%= @user %>
-SCRIPT=/home/<%= @user %>/buildAgent/bin/agent.sh
-NAME=<%= @service %>
-PIDFILE=/home/<%= @user %>/buildAgent/logs/buildAgent.pid
-
-. /lib/init/vars.sh
-. /lib/lsb/init-functions
+SCRIPT=<%= @home %>/bin/agent.sh
+NAME=<%= @agent_name %>
+PIDFILE=<%= @temp_dir %>/buildAgent.pid
 
 case "$1" in
-    start)
-        sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
-        ;;
-    stop)
-        sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
-        ;;
-    force-reload)
-        sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
-        sleep 2
-        sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
-        ;;
-    restart)
-        sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
-        sleep 2
-        sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
-        ;;
-    status)
-        status_of_proc -p $PIDFILE $SCRIPT $NAME
-        ;;
-    *)
-        echo "Usage: $0 {start|stop|restart|force-reload|status}"
-        exit 1
-        ;;
+  start)
+    sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
+    ;;
+  stop)
+    sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
+    ;;
+  restart)
+    sudo -H -u $USER /bin/bash --login -c "$SCRIPT stop"
+    sleep 2
+    sudo -H -u $USER /bin/bash --login -c "$SCRIPT start"
+    ;;
+  status)
+    # TODO: fix status
+    # status_of_proc -p $PIDFILE $SCRIPT $NAME
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
 esac
 
 exit 0

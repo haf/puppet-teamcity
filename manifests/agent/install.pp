@@ -16,14 +16,14 @@ class teamcity::agent::install {
       User[$teamcity::agent::user],
       Wget::Fetch['download']
     ],
-    user    => $teamcity::agent::user
+    user    => 'root',
   }
 
   file { $teamcity::agent::home:
-    ensure => directory,
-    owner  => $teamcity::agent::user,
-    group  => $teamcity::common::group,
-    mode   => '0644',
+    ensure  => directory,
+    owner   => $teamcity::agent::user,
+    group   => $teamcity::common::group,
+    mode    => '0644',
     require => Exec['unzip'],
   }
 }
