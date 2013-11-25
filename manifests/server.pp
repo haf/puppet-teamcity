@@ -70,6 +70,8 @@ class teamcity::server(
     state   => ['NEW'],
     dport   => 8111,
     action  => 'accept',
+    require => Anchor['teamcity::server::start'],
+    before  => Anchor['teamcity::server::end'],
   }
 
   anchor { 'teamcity::server::end': }
