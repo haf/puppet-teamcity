@@ -18,11 +18,6 @@ class teamcity::server(
   # $catalina_pid = "/var/run/catalina.pid"
 
   # TODO: set up external database
-  # TODO: Catalina wants to write:
-  #  - SEVERE: Unable to create directory for deployment: /opt/teamcity-server/conf/Catalina/localhost   
-  #  - INFO: Deploying web application directory /opt/teamcity-server/webapps/ROOT 
-  # TODO: setting up logging:
-  #  - log4j:ERROR Could not parse url [file:/etc/teamcity-server/teamcity-server-log4j.xml].
 
   anchor { 'teamcity::server::start': }
 
