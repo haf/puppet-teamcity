@@ -8,8 +8,8 @@ class teamcity::agent(
   $work_dir       = '/opt/teamcity-agent/work',
   $temp_dir       = '/opt/teamcity-agent/temp',
   $system_dir     = '/opt/teamcity-agent/system',
-  $agent_opts     = '',
-  $agent_mem_opts = '-Xmx384m',
+  $agent_opts     = '', # TODO: expose in teamcity-agent.erb
+  $agent_mem_opts = '-Xmx384m', # TODO: expose in teamcity-agent.erb
   $properties  = {}
 ) {
   $service = 'teamcity-agent'
@@ -19,6 +19,7 @@ class teamcity::agent(
 
   include teamcity::common
   include teamcity::agent::install
+  include teamcity::agent::env
 
   user { $user:
     ensure  => present,
@@ -27,6 +28,10 @@ class teamcity::agent(
     gid     => $teamcity::common::group,
     require => Anchor['teamcity::agent::start'],
     before  => Anchor['teamcity::agent::end'],
+  }
+
+  teamcity::agent::env::bash_profile { 'env:WORK_DIR':
+    content => "export WORK_DIR=\"$work_dir\""
   }
 
   file { "$home/conf/buildAgent.properties":
