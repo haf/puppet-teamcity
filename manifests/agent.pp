@@ -31,7 +31,7 @@ class teamcity::agent(
   }
 
   teamcity::agent::env::bash_profile { 'env:WORK_DIR':
-    content => "export WORK_DIR=\"$work_dir\""
+    content => "export AGENT_WORK_DIR=\"$work_dir\""
   }
 
   file { "$home/conf/buildAgent.properties":
