@@ -7,7 +7,8 @@ class teamcity::server(
   $conf_dir        = '/opt/teamcity-server/conf',
   $port            = 8111,
   $server_opts     = '',
-  $server_mem_opts = '-Xms750m -Xmx750m -XX:MaxPermSize=270m'
+  $server_mem_opts = '-Xms750m -Xmx750m -XX:MaxPermSize=270m',
+  $manage_firewall = hiera('manage_firewall', false)
 ) {
   $service      = 'teamcity-server'
   $bin_dir      = "$home_dir/bin"
@@ -60,13 +61,15 @@ class teamcity::server(
     before     => Anchor['teamcity::server::end'],
   }
 
-  firewall { "101 allow tc-connections:8111":
-    proto   => 'tcp',
-    state   => ['NEW'],
-    dport   => 8111,
-    action  => 'accept',
-    require => Anchor['teamcity::server::start'],
-    before  => Anchor['teamcity::server::end'],
+  if $manage_firewall {
+    firewall { "211 allow tc-connections:8111":
+      proto   => 'tcp',
+      state   => ['NEW'],
+      dport   => 8111,
+      action  => 'accept',
+      require => Anchor['teamcity::server::start'],
+      before  => Anchor['teamcity::server::end'],
+    }
   }
 
   anchor { 'teamcity::server::end': }
