@@ -1,40 +1,19 @@
 class teamcity::server::config(
   $content
 ) {
-  file { $teamcity::server::home_dir:
-    ensure  => directory,
+  File {
     owner   => $teamcity::server::user,
     group   => $teamcity::common::group,
     mode    => '0755',
   }
 
-  file { $teamcity::server::bin_dir:
-    ensure => directory,
-    owner   => $teamcity::server::user,
-    group   => $teamcity::common::group,
-    mode    => '0755',
-    recurse => true,
-    require => File[$teamcity::server::home_dir],
-  }
-
-  file { $teamcity::server::temp_dir:
-    ensure  => directory,
-    owner   => $teamcity::server::user,
-    group   => $teamcity::common::group,
-    mode    => '0755',
-    require => File[$teamcity::server::home_dir],
-  }
-
-  file { [
-    $teamcity::server::log_dir,
-    $teamcity::server::data_dir,
-    "$teamcity::server::home_dir/webapps/ROOT/WEB-INF"
-    ]:
-    ensure  => directory,
-    owner   => $teamcity::server::user,
-    group   => $teamcity::common::group,
-    mode    => '0755',
-    recurse => true,
+  file {
+    $teamcity::server::home_dir:
+      ensure => directory;
+    $teamcity::server::log_dir:
+      ensure => directory;
+    $teamcity::server::data_dir:
+      ensure => directory,
   }
 
   file { "/etc/init.d/$teamcity::server::service":
@@ -43,5 +22,6 @@ class teamcity::server::config(
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
+    notify  => Service[$teamcity::server::service],
   }
 }

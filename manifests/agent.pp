@@ -1,19 +1,20 @@
 class teamcity::agent(
-  $user           = 'teamcity-agent',
-  $server_url     = 'http://tc:8111',
-  $agent_name     = $hostname,
-  $own_port       = 9090,
-  $own_address    = $hostname,
-  $home           = '/opt/teamcity-agent',
-  $work_dir       = '/opt/teamcity-agent/work',
-  $temp_dir       = '/opt/teamcity-agent/temp',
-  $system_dir     = '/opt/teamcity-agent/system',
-  $agent_opts     = '', # TODO: expose in teamcity-agent.erb
-  $agent_mem_opts = '-Xmx384m', # TODO: expose in teamcity-agent.erb
-  $properties  = {}
+  $user            = 'teamcity-agent',
+  $server_url      = 'http://tc:8111',
+  $agent_name      = $hostname,
+  $own_port        = 9090,
+  $own_address     = $hostname,
+  $home            = '/opt/teamcity-agent',
+  $agent_opts      = '', # TODO: expose in teamcity-agent.erb
+  $agent_mem_opts  = '-Xmx384m', # TODO: expose in teamcity-agent.erb
+  $properties      = {},
+  $manage_firewall = hiera('manage_firewall', false)
 ) {
-  $service = 'teamcity-agent'
-  $bin_dir = "$home/bin"
+  $service         = 'teamcity-agent'
+  $bin_dir         = "$home/bin"
+  $work_dir        = "$home/work"
+  $temp_dir        = "$home/temp"
+  $system_dir      = "$home/system"
 
   anchor { 'teamcity::agent::start': }
 
@@ -72,7 +73,7 @@ class teamcity::agent(
     ensure     => running,
     enable     => true,
     hasstatus  => false,
-    status     => 'ps aux | grep /usr/bin/java | grep agent.AgentMain',
+    status     => 'ps aux | grep /usr/bin/java | grep AgentMain',
     hasrestart => true,
     require    => [
       Anchor['teamcity::agent::start'],
@@ -83,13 +84,15 @@ class teamcity::agent(
     before     => Anchor['teamcity::agent::end'],
   }
 
-  firewall { "101 allow agent-connections:9090":
-    proto   => 'tcp',
-    state   => ['NEW'],
-    dport   => 9090,
-    action  => 'accept',
-    require => Anchor['teamcity::agent::start'],
-    before  => Anchor['teamcity::agent::end'],
+  if $manage_firewall {
+    firewall { "101 allow agent-connections:9090":
+      proto   => 'tcp',
+      state   => ['NEW'],
+      dport   => 9090,
+      action  => 'accept',
+      require => Anchor['teamcity::agent::start'],
+      before  => Anchor['teamcity::agent::end'],
+    } 
   }
 
   anchor { 'teamcity::agent::end': }

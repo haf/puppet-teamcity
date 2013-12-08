@@ -44,7 +44,6 @@ class teamcity::server(
   class { 'teamcity::server::config':
     content => template('teamcity/teamcity-server.erb'),
     require => Package['teamcity-server'],
-    notify  => Service[$service],
   }
 
   service { $service:
