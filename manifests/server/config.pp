@@ -5,7 +5,7 @@ class teamcity::server::config(
     ensure  => directory,
     owner   => $teamcity::server::user,
     group   => $teamcity::common::group,
-    mode    => '0644',
+    mode    => '0755',
   }
 
   file { $teamcity::server::bin_dir:
@@ -17,6 +17,14 @@ class teamcity::server::config(
     require => File[$teamcity::server::home_dir],
   }
 
+  file { $teamcity::server::temp_dir:
+    ensure  => directory,
+    owner   => $teamcity::server::user,
+    group   => $teamcity::common::group,
+    mode    => '0755',
+    require => File[$teamcity::server::home_dir],
+  }
+
   file { [
     $teamcity::server::log_dir,
     $teamcity::server::data_dir,
@@ -25,7 +33,7 @@ class teamcity::server::config(
     ensure  => directory,
     owner   => $teamcity::server::user,
     group   => $teamcity::common::group,
-    mode    => '0644',
+    mode    => '0755',
     recurse => true,
   }
 

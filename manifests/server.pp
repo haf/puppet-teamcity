@@ -12,6 +12,7 @@ class teamcity::server(
 ) {
   $service      = 'teamcity-server'
   $bin_dir      = "$home_dir/bin"
+  $temp_dir     = "$home_dir/temp"
   $catalina_log = "$log_dir/catalina.log"
 
   # see teamcity-server.erb
