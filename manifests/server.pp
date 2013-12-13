@@ -34,10 +34,7 @@ class teamcity::server(
 
   package { 'teamcity-server':
     ensure  => installed,
-    require => [
-      Anchor['teamcity::server::start'],
-      Class['java']
-    ],
+    require => Anchor['teamcity::server::start'],
     before  => Anchor['teamcity::server::end'],
   }
 
@@ -54,6 +51,7 @@ class teamcity::server(
     hasrestart => true,
     require    => [
       Anchor['teamcity::server::start'],
+      Class['java'],
       User[$user],
       Group[$teamcity::common::group],
       Package['teamcity-server']
@@ -62,7 +60,7 @@ class teamcity::server(
   }
 
   if $manage_firewall {
-    firewall { "211 allow tc-connections:8111":
+    firewall { "211 allow teamcity-server:8111":
       proto   => 'tcp',
       state   => ['NEW'],
       dport   => 8111,
