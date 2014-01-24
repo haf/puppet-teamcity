@@ -104,10 +104,10 @@ class teamcity::agent(
   }
 
   if $manage_firewall {
-    firewall { "101 allow agent-connections:9090":
+    firewall { "101 allow agent-connections:$own_port":
       proto   => 'tcp',
       state   => ['NEW'],
-      dport   => 9090,
+      dport   => $own_port,
       action  => 'accept',
       require => Anchor['teamcity::agent::start'],
       before  => Anchor['teamcity::agent::end'],
