@@ -13,7 +13,7 @@ class teamcity::agent(
   $service         = 'teamcity-agent'
   $bin_dir         = "$home/bin"
   $work_dir        = "$home/work"
-  $temp_dir        = "$home/temp"
+  $temp_dir        = "$home/work/temp"
   $system_dir      = "$home/system"
   $conf_dir        = "$home/conf"
   $plugins_dir     = "$home/plugins"
@@ -52,7 +52,7 @@ class teamcity::agent(
       User[$user],
       File[$home]
     ],
-    before  => Anchor['teamcity::agent::end'],
+    before      => Anchor['teamcity::agent::end'],
   }
 
   file { "$home/conf/buildAgent.properties":
@@ -111,7 +111,7 @@ class teamcity::agent(
       action  => 'accept',
       require => Anchor['teamcity::agent::start'],
       before  => Anchor['teamcity::agent::end'],
-    } 
+    }
   }
 
   anchor { 'teamcity::agent::end': }
