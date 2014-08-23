@@ -1,9 +1,11 @@
+# A class for installing the agent from a TeamCity Server
+#
 class teamcity::agent::install {
   include wget
 
   wget::fetch { 'download':
-    source      => "$teamcity::agent::server_url/update/buildAgent.zip",
-    destination => "/tmp/buildAgent.zip",
+    source      => "${teamcity::agent::server_url}/update/buildAgent.zip",
+    destination => '/tmp/buildAgent.zip',
     timeout     => 0,
     verbose     => false,
   }
