@@ -52,7 +52,7 @@ class teamcity::server(
     status     => 'ps aux | grep /usr/bin/java | grep teamcity_logs',
     hasrestart => true,
     require    => [
-      Class['java'],
+      Class[java],
       User[$user],
       Group[$teamcity::common::group],
       Package['teamcity-server']
