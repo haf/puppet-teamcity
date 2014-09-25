@@ -1,0 +1,14 @@
+{
+  "name": "neillturner-teamcity",
+  "version": "1.0.1",
+  "source": "https://github.com/neillturner/puppet-teamcity.git",
+  "author": "neillturner",
+  "license": "ASL",
+  "summary": "Module to manage teamcity installations",
+  "description": "Module to manage teamcity installations",
+  "project_page": "https://github.com/neillturner/puppet-teamcity",
+  "dependencies": [
+  ],
+  "types": [
+  ]
+}

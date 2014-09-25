@@ -1,26 +1,25 @@
 # Puppet TeamCity module
 
-The TeamCity puppet module installs the latest version of TeamCity from a [yum
-repository](https://github.com/haf/puppet-yum) where you have a [package for
-TeamCity](https://github.com/haf/fpm-recipes/tree/master/teamcity-server).
-
-Provision a YUM repo with the above module, build the teamcity-server package,
-and off you go!
-
-If you don't have a package named 'teamcity-server', this module won't work.
+The TeamCity puppet module downloads and installs the latest version of TeamCity.
+Also allows plugins to be installed. 
 
 Tested on CentOS 6.x.
 
 ## TeamCity::Server - Usage:
 
-If you read the above introduction you know that you need a package for the
-server, in order to install it. With a package, a lot of the setup is already
-taken care of.
 
 ```puppet
-class profiles::teamcity_server {
-  include teamcity::server
-}
+ class { 'oraclejava::jdk7_rpm': }
+ 
+ class { 'teamcity::server':
+    require => Class['oraclejava::jdk7_rpm'],
+ }
+
+ class { 'teamcity::server::plugin':
+    plugin_url       => 'http://teamcity.jetbrains.com/guestAuth/repository/download/bt434/.lastSuccessful/jonnyzzz.node.zip',
+    plugin_zip_file  => 'jonnyzzz.node.zip',
+    require          => Class['teamcity::server'],
+ }
 ```
 
 This stanza does not include a default build agent; see below. Memory options
@@ -36,21 +35,18 @@ hiera:
 
 ```yaml
 ---
-teamcity::agent::server_url:
-  http://monkey-tc.local
+teamcity::agent::server_url: http://192.168.33.31:8111
 ```
 
 Besides, that, here's a sample configuration profile that uses the TeamCity
 Agent class:
 
 ```puppet
-class profiles::teamcity_agent {
-  include teamcity::agent
-  include our_buildenv
-
-  # when debugging the agent, I can't live without this
-  teamcity::agent::env::bash_profile { 'alias g=git': }
-}
+ class { 'oraclejava::jdk7_rpm': }
+ 
+ class { 'teamcity::agent':
+    require => Class['oraclejava::jdk7_rpm'],
+ }
 ```
 
 It's worth noting that if you change the folders in the agent-class to be

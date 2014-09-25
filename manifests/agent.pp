@@ -95,7 +95,6 @@ class teamcity::agent(
     hasrestart => true,
     require    => [
       Anchor['teamcity::agent::start'],
-      Class['java'],
       Class['teamcity::common'],
       File["$home/bin/agent.sh"],
       File["/etc/init.d/$service"]

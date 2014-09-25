@@ -5,10 +5,12 @@
 #  - 'hsqldb' (default)
 class teamcity::server(
   $user            = 'teamcity-server',
-  $home_dir        = '/opt/teamcity-server',
+  $install_dir     = '/opt',
+  $home_dir        = '/opt/TeamCity',
   $data_dir        = '/var/lib/teamcity-server',
   $log_dir         = '/var/log/teamcity-server',
-  $conf_dir        = '/opt/teamcity-server/conf',
+  $conf_dir        = '/opt/TeamCity/conf',
+  $team_city_version = '8.1.4',
   $port            = 8111,
   $server_opts     = '',
   $server_mem_opts = '-Xms750m -Xmx750m -XX:MaxPermSize=270m',
@@ -34,15 +36,15 @@ class teamcity::server(
   include teamcity::db
   contain teamcity::db
 
-  package { 'teamcity-server':
-    ensure  => installed,
+  class { 'teamcity::server::install':
+    require => User[$user],
   }
 
   class { 'teamcity::server::config':
     content => template('teamcity/teamcity-server.erb'),
-    require => Package['teamcity-server'],
+    require => Class['teamcity::server::install'],
   }
-
+  
   contain teamcity::server::config
 
   service { $service:
@@ -52,10 +54,10 @@ class teamcity::server(
     status     => 'ps aux | grep /usr/bin/java | grep teamcity_logs',
     hasrestart => true,
     require    => [
-      Class[java],
       User[$user],
       Group[$teamcity::common::group],
-      Package['teamcity-server']
+      Class['teamcity::server::config'],
+     
     ],
   }
 }
