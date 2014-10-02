@@ -8,6 +8,7 @@ class teamcity::server(
   $install_dir     = '/opt',
   $home_dir        = '/opt/TeamCity',
   $data_dir        = '/var/lib/teamcity-server',
+  $plugin_dir      = '/var/lib/teamcity-server/plugins',
   $log_dir         = '/var/log/teamcity-server',
   $conf_dir        = '/opt/TeamCity/conf',
   $team_city_version = '8.1.4',

@@ -113,5 +113,15 @@ class teamcity::agent(
     }
   }
 
+  # start the agent 
+  exec { 'start agent':
+    command     => "$bin_dir/agent.sh start",
+    creates     => "$home/logs/buildAgent.pid",
+    require     => [
+       Service["$service"]
+    ],
+    before      => Anchor['teamcity::agent::end'],
+  }  
+
   anchor { 'teamcity::agent::end': }
 }
