@@ -33,7 +33,7 @@ class teamcity::server(
     home   => $home_dir,
     system => true,
     gid    => $teamcity::common::group,
-    require => teamcity::common
+    require =>  Class['teamcity::common']
   }
 
   include teamcity::db
