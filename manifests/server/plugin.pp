@@ -14,6 +14,7 @@ class teamcity::server::plugin(
  exec { 'set ownership teamcity plugin':
    command     => "chown $teamcity::server::user:$teamcity::common::group \"$teamcity::server::plugin_dir/$plugin_zip_file\"",
    cwd         => "$teamcity::server::plugin_dir",
+   require     => Exec['download teamcity plugin'],
    timeout     => 0
   }   
   
