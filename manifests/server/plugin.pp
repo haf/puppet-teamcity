@@ -3,7 +3,7 @@ class teamcity::server::plugin(
     $plugin_zip_file  = '',
 ) {
 
-  exec { 'install teamcity plugin':
+  exec { 'download teamcity plugin':
    command     => "wget \"$plugin_url\"",
    creates     => "$teamcity::server::plugin_dir/$plugin_zip_file",
    cwd         => "$teamcity::server::plugin_dir",
@@ -11,7 +11,7 @@ class teamcity::server::plugin(
    timeout     => 0
   } 
   
- exec { 'install teamcity plugin':
+ exec { 'set ownership teamcity plugin':
    command     => "chown $teamcity::server::user:$teamcity::common::group \"$teamcity::server::plugin_dir/$plugin_zip_file\"",
    cwd         => "$teamcity::server::plugin_dir",
    timeout     => 0
