@@ -32,6 +32,8 @@ class teamcity::server(
     ensure => present,
     home   => $home_dir,
     system => true,
+    gid    => $teamcity::common::group,
+    require => teamcity::common
   }
 
   include teamcity::db
