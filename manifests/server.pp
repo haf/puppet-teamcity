@@ -13,6 +13,7 @@ class teamcity::server(
   $conf_dir        = '/opt/TeamCity/conf',
   $team_city_version = '8.1.4',
   $port            = 8111,
+  $wget_opts       = '',
   $server_opts     = '',
   $server_mem_opts = '-Xms750m -Xmx750m -XX:MaxPermSize=270m',
   $db_type         = 'hsqldb'
@@ -40,6 +41,7 @@ class teamcity::server(
   contain teamcity::db
 
   class { 'teamcity::server::install':
+    wget_opts => $wget_opts,
     require => User[$user],
   }
 

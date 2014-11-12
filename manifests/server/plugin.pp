@@ -1,10 +1,11 @@
 class teamcity::server::plugin(
     $plugin_url  = '',
     $plugin_zip_file  = '',
+    $wget_opts = '',
 ) {
 
   exec { 'download teamcity plugin':
-   command     => "wget \"$plugin_url\"",
+   command     => "wget $wget_opts \"$plugin_url\"",
    creates     => "$teamcity::server::plugin_dir/$plugin_zip_file",
    cwd         => "$teamcity::server::plugin_dir",
    notify      => Exec['restart teamcity service'],

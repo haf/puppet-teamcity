@@ -1,9 +1,10 @@
 class teamcity::server::install(
     $download_dir       = "/tmp",
+    $wget_opts          = '',
 ) {
 
   exec { 'download_team_city':
-   command     => "wget \"http://download.jetbrains.com/teamcity/TeamCity-$teamcity::server::team_city_version.tar.gz\"",
+   command     => "wget $wget_opts \"http://download.jetbrains.com/teamcity/TeamCity-$teamcity::server::team_city_version.tar.gz\"",
    creates     => "$download_dir/TeamCity-$teamcity::server::team_city_version.tar.gz",
    cwd         => "$download_dir",
    timeout     => 0
