@@ -29,14 +29,39 @@ class teamcity::server(
 
   include teamcity::common
 
-  user { $user:
-    ensure => present,
-    home   => $home_dir,
-    system => true,
-    gid    => $teamcity::common::group,
-    require =>  Class['teamcity::common']
+  
+   file {$teamcity::server::data_dir:
+      ensure => directory,
+      owner   => $teamcity::server::user,
+      group   => $teamcity::common::group,
+      mode    => '0755',
+      require => Class['teamcity::common']
+   }
+   
+   file {"$teamcity::server::data_dir/config":
+      ensure => directory,
+      owner   => $teamcity::server::user,
+      group   => $teamcity::common::group,
+      mode    => '0755',
+      require => File[$teamcity::server::data_dir]
+   }
+   
+   file {"$teamcity::server::data_dir/config/projects":
+      ensure => directory,
+      owner   => $teamcity::server::user,
+      group   => $teamcity::common::group,
+      mode    => '0755',
+      require => File["$teamcity::server::data_dir/config"]
+   }  
+   
+    user { $user:
+       ensure => present,
+       home   => $home_dir,
+       system => true,
+       gid    => $teamcity::common::group,
+       require => File["$teamcity::server::data_dir/config/projects"] 
   }
-
+  
   include teamcity::db
   contain teamcity::db
 

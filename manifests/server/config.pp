@@ -12,12 +12,6 @@ class teamcity::server::config(
       ensure => directory;
     $teamcity::server::log_dir:
       ensure => directory;
-    $teamcity::server::data_dir:
-      ensure => directory;
-    "$teamcity::server::data_dir/config":
-      ensure => directory;  
-    "$teamcity::server::data_dir/config/projects":
-      ensure => directory;    
     $teamcity::server::plugin_dir:
       ensure => directory,
   }
