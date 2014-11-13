@@ -45,7 +45,7 @@ class teamcity::server(
    } 
    
     exec { 'chown teamcity data directories':
-        command   => "chown -R $user:$teamcity::common::group  $data_dir/config/projects  $data_dir/lib/jdbc",
+        command   => "chown -R $user:$teamcity::common::group  $data_dir/config  $data_dir/lib",
         timeout   => 0, 
         require   => Exec['create teamcity data directories'],
  }   
