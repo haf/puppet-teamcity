@@ -37,12 +37,24 @@ class teamcity::server(
        require => Class['teamcity::common'] 
   }
   
+   exec { 'create teamcity data directories':
+       command   => 'mkdir -p $data_dir/config/projects   $data_dir/lib/jdbc',
+       timeout   => 0, 
+       require   => User[$user],
+   } 
+   
+    exec { 'chown teamcity data directories':
+        command   => 'chown -R $user:$teamcity::common::group  $data_dir/config/projects  $data_dir/lib/jdbc',
+        timeout   => 0, 
+        require   => Exec['create teamcity data directories'],
+ }   
+  
   include teamcity::db
   contain teamcity::db
 
   class { 'teamcity::server::install':
     wget_opts => $wget_opts,
-    require => User[$user],
+    require => Exec['chown teamcity data directories'],
   }
 
   class { 'teamcity::server::config':
