@@ -7,9 +7,9 @@ class teamcity::db(
   $port         = 5432,
   $db_name      = 'teamcity_server'
 ){
-  $db_file = "${teamcity::data_dir}/config/database.properties"
+  $db_file = "${teamcity::server::data_dir}/config/database.properties"
 
-  case $teamcity::db_type {
+  case $teamcity::server::db_type {
     # also see https://github.com/foxsoft/puppet-postgresql/blob/master/manifests/classes/postgresql-centos-v9-0.pp
     'postgresql': {
       if $manage_repos {
@@ -28,7 +28,7 @@ class teamcity::db(
       }
 
       # see http://confluence.jetbrains.com/display/TCD8/Setting+up+an+External+Database#SettingupanExternalDatabase-SelectingExternalDatabaseEngine
-      $jdbc_out = "${teamcity::data_dir}/lib/jdbc/postgresql-9.3-1101.jdbc41.jar"
+      $jdbc_out = "${teamcity::server::data_dir}/lib/jdbc/postgresql-9.3-1101.jdbc41.jar"
       exec { 'download-jdbc41':
         command => "curl http://jdbc.postgresql.org/download/postgresql-9.3-1101.jdbc41.jar --output ${jdbc_out}",
         creates => $jdbc_out,
@@ -37,8 +37,8 @@ class teamcity::db(
       # configure TC to use the database
       file { $db_file:
         ensure  => present,
-        owner   => $teamcity::user,
-        group   => $teamcity::group,
+        owner   => $teamcity::server::user,
+        group   => $teamcity::common::group,
         content => "
 # This file is managed by puppet, do not change manually!
 # PostgreSQL configured
@@ -76,11 +76,11 @@ testOnBorrow=false
         creates => "/tmp/$mysql_connector/$mysql_connector-bin.jar",
       }
       
-      $jdbc_out = "${teamcity::data_dir}/lib/jdbc/$mysql_connector-bin.jar"
+      $jdbc_out = "${teamcity::server::data_dir}/lib/jdbc/$mysql_connector-bin.jar"
       file { $jdbc_out:
         ensure  => present,
-        owner   => $teamcity::user,
-        group   => $teamcity::group,
+        owner   => $teamcity::server::user,
+        group   => $teamcity::common::group,
         source  => "/tmp/$mysql_connector/$mysql_connector-bin.jar" ,
         require => Exec["download-$mysql_connector"]
       }  
