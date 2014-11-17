@@ -88,8 +88,8 @@ testOnBorrow=false
       # configure TC to use the database
       file { $db_file:
         ensure  => present,
-        owner   => $teamcity::user,
-        group   => $teamcity::group,
+        owner   => $teamcity::server::user,
+        group   => $teamcity::server::group,
         content => "
 # This file is managed by puppet, do not change manually!
 # MySQL configured
