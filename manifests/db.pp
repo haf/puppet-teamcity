@@ -89,7 +89,7 @@ testOnBorrow=false
       file { $db_file:
         ensure  => present,
         owner   => $teamcity::server::user,
-        group   => $teamcity::server::group,
+        group   => $teamcity::common::group,
         content => "
 # This file is managed by puppet, do not change manually!
 # MySQL configured
