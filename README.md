@@ -5,7 +5,7 @@ Also allows plugins to be installed.
 
 Tested on CentOS 6.x.
 
-## TeamCity::Server - Usage:
+## Minimal TeamCity::Server - Usage:
 
 
 ```puppet
@@ -21,6 +21,8 @@ Tested on CentOS 6.x.
     require          => Class['teamcity::server'],
  }
 ```
+
+
 
 This stanza does not include a default build agent; see below. Memory options
 are configured to be the production values, so you'll need around 750 MiB for
@@ -48,6 +50,37 @@ Agent class:
     require => Class['oraclejava::jdk7_rpm'],
  }
 ```
+
+## Complex TeamCity::Server - Usage:
+
+
+Install via an http proxy and configure port, directories etc
+
+```puppet
+ class { 'oraclejava::jdk7_rpm':
+      download_url  => 'https://edelivery.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm',
+      wget_opts   => "-e use_proxy=yes -e http_proxy=10.99.99.99:3128  -e https_proxy=10.99.99.99:3128",
+      require     => Class['epel']
+ }
+
+ class { 'teamcity::server':
+    team_city_version => '8.1.4',
+    data_dir          => '/data/teamcity-server',
+    plugin_dir        => '/data/teamcity-server/plugins'
+    db_type           => 'mysql',
+    port              => '8000', 
+    address           => 'myteamcityurl.com',
+    wget_opts         => "-e use_proxy=yes -e http_proxy=10.99.99.99:3128",
+    require           => Class['oraclejava::jdk7_rpm'],
+ }
+ 
+ class { 'teamcity::server::plugin':
+    plugin_url       => 'https://teamcity.jetbrains.com/guestAuth/repository/download/bt434/.lastSuccessful/jonnyzzz.node.zip',
+    plugin_zip_file  => 'jonnyzzz.node.zip',
+    wget_opts        => "-e use_proxy=yes -e http_proxy=10.99.99.99:3128 -e https_proxy=10.99.99.99:3128",
+    require          => Class['teamcity::server'],
+ }
+ ```
 
 It's worth noting that if you change the folders in the agent-class to be
 outside of their default you're going to have to hack Catalina and a range of
