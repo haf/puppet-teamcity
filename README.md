@@ -60,8 +60,7 @@ Install via an http proxy and configure port, directories etc
  class { 'oraclejava::jdk7_rpm':
       download_url  => 'https://edelivery.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm',
       wget_opts   => "-e use_proxy=yes -e http_proxy=10.99.99.99:3128  -e https_proxy=10.99.99.99:3128",
-      require     => Class['epel']
- }
+  }
 
  class { 'teamcity::server':
     team_city_version => '8.1.4',
