@@ -4,20 +4,24 @@
 #  - 'postgresql'
 #  - 'hsqldb' (default)
 class teamcity::server(
-  $user            = 'teamcity-server',
-  $install_dir     = '/opt',
-  $home_dir        = '/opt/TeamCity',
-  $data_dir        = '/var/lib/teamcity-server',
-  $plugin_dir      = '/var/lib/teamcity-server/plugins',
-  $log_dir         = '/var/log/teamcity-server',
-  $conf_dir        = '/opt/TeamCity/conf',
+  $user              = 'teamcity-server',
+  $install_dir       = '/opt',
+  $home_dir          = '/opt/TeamCity',
+  $data_dir          = '/var/lib/teamcity-server',
+  $plugin_dir        = '/var/lib/teamcity-server/plugins',
+  $log_dir           = '/var/log/teamcity-server',
+  $conf_dir          = '/opt/TeamCity/conf',
   $team_city_version = '8.1.4',
-  $port            = 8111,
-  $address         = '0.0.0.0',
-  $wget_opts       = '',
-  $server_opts     = '',
-  $server_mem_opts = '-Xms750m -Xmx750m -XX:MaxPermSize=270m',
-  $db_type         = 'hsqldb'
+  $port              = 8111,
+  $address           = '0.0.0.0',
+  $wget_opts         = '',
+  $server_opts       = '',
+  $server_mem_opts   = '-Xms750m -Xmx750m -XX:MaxPermSize=270m',
+  $db_type           = 'hsqldb',
+  $http_proxy_host   = '',
+  $http_proxy_port   = '',
+  $https_proxy_host  = '',
+  $https_proxy_port  = '',
 ) {
   $service      = 'teamcity-server'
   $bin_dir      = "${home_dir}/bin"
