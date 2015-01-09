@@ -70,10 +70,10 @@ Install via an http proxy and configure port, directories etc
     port              => '8000', 
     address           => 'myteamcityurl.com',
     wget_opts         => "-e use_proxy=yes -e http_proxy=10.99.99.99:3128",
-    http_proxy_host   = '10.99.99.99',
-    http_proxy_port   = '3128',
-    https_proxy_host  = '10.99.99.99',
-    https_proxy_port  = '3128',
+    http_proxy_host   => '10.99.99.99',
+    http_proxy_port   => '3128',
+    https_proxy_host  => '10.99.99.99',
+    https_proxy_port  => '3128',
     require           => Class['oraclejava::jdk7_rpm'],
  }
  
