@@ -70,19 +70,19 @@ testOnBorrow=false
 
       # see http://confluence.jetbrains.com/display/TCD8/Setting+up+an+External+Database#SettingupanExternalDatabase-SelectingExternalDatabaseEngine
       $mysql_connector = 'mysql-connector-java-5.1.33'
-      exec { "download-$mysql_connector":
-        command => "curl http://ftp.jaist.ac.jp/pub/mysql/Downloads/Connector-J/$mysql_connector.tar.gz | tar -xvz   $mysql_connector/$mysql_connector-bin.jar",
+      exec { "download-${mysql_connector}":
+        command => "curl http://ftp.jaist.ac.jp/pub/mysql/Downloads/Connector-J/${mysql_connector}.tar.gz | tar -xvz   ${mysql_connector}/${mysql_connector}-bin.jar",
         cwd     => '/tmp',
-        creates => "/tmp/$mysql_connector/$mysql_connector-bin.jar",
+        creates => "/tmp/${mysql_connector}/${mysql_connector}-bin.jar",
       }
-      
-      $jdbc_out = "${teamcity::server::data_dir}/lib/jdbc/$mysql_connector-bin.jar"
+
+      $jdbc_out = "${teamcity::server::data_dir}/lib/jdbc/${mysql_connector}-bin.jar"
       file { $jdbc_out:
         ensure  => present,
         owner   => $teamcity::server::user,
         group   => $teamcity::common::group,
-        source  => "/tmp/$mysql_connector/$mysql_connector-bin.jar" ,
-        require => Exec["download-$mysql_connector"]
+        source  => "/tmp/${mysql_connector}/${mysql_connector}-bin.jar" ,
+        require => Exec["download-${mysql_connector}"]
       }  
 
       # configure TC to use the database

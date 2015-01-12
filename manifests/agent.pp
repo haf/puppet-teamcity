@@ -11,15 +11,15 @@ class teamcity::agent(
   $manage_firewall = hiera('manage_firewall', false)
 ) {
   $service         = 'teamcity-agent'
-  $bin_dir         = "$home/bin"
-  $work_dir        = "$home/work"
-  $temp_dir        = "$home/work/temp"
-  $system_dir      = "$home/system"
-  $conf_dir        = "$home/conf"
-  $plugins_dir     = "$home/plugins"
-  $lib_dir         = "$home/lib"
-  $launcher_dir    = "$home/launcher"
-  $contrib_dir     = "$home/contrib"
+  $bin_dir         = "${home}/bin"
+  $work_dir        = "${home}/work"
+  $temp_dir        = "${home}/work/temp"
+  $system_dir      = "${home}/system"
+  $conf_dir        = "${home}/conf"
+  $plugins_dir     = "${home}/plugins"
+  $lib_dir         = "${home}/lib"
+  $launcher_dir    = "${home}/launcher"
+  $contrib_dir     = "${home}/contrib"
 
   anchor { 'teamcity::agent::start': }
 
@@ -37,25 +37,25 @@ class teamcity::agent(
   }
 
   teamcity::agent::env::bash_profile { 'env:WORK_DIR':
-    content => "export AGENT_WORK_DIR=\"$work_dir\""
+    content => "export AGENT_WORK_DIR=\"${work_dir}\""
   }
 
   $has_done_chown = '/etc/teamcity-agent.chown'
 
   # change the permissions of the agent installation.
   exec { 'teamcity::agent chown':
-    command     => "/bin/chown -R ${user}:${teamcity::common::group} ${home}* && /bin/touch $has_done_chown",
-    creates     => $has_done_chown,
-    subscribe   => Class['teamcity::agent::install'],
-    require     => [
+    command   => "/bin/chown -R ${user}:${teamcity::common::group} ${home}* && /bin/touch ${has_done_chown}",
+    creates   => $has_done_chown,
+    subscribe => Class['teamcity::agent::install'],
+    require   => [
       Anchor['teamcity::agent::start'],
       User[$user],
       File[$home]
     ],
-    before      => Anchor['teamcity::agent::end'],
+    before    => Anchor['teamcity::agent::end'],
   }
 
-  file { "$home/conf/buildAgent.properties":
+  file { "${home}/conf/buildAgent.properties":
     ensure  => present,
     replace => false,
     content => template('teamcity/buildAgent.properties.erb'),
@@ -69,7 +69,7 @@ class teamcity::agent(
     before  => Anchor['teamcity::agent::end'],
   }
 
-  file { "$home/bin/agent.sh":
+  file { "${home}/bin/agent.sh":
     mode    => '0755',
     require => [
       Anchor['teamcity::agent::start'],
@@ -79,7 +79,7 @@ class teamcity::agent(
     before  => Anchor['teamcity::agent::end'],
   }
 
-  file { "/etc/init.d/$service":
+  file { "/etc/init.d/${service}":
     ensure  => present,
     content => template('teamcity/teamcity-agent.erb'),
     mode    => '0755',
@@ -96,14 +96,14 @@ class teamcity::agent(
     require    => [
       Anchor['teamcity::agent::start'],
       Class['teamcity::common'],
-      File["$home/bin/agent.sh"],
-      File["/etc/init.d/$service"]
+      File["${home}/bin/agent.sh"],
+      File["/etc/init.d/${service}"]
     ],
     before     => Anchor['teamcity::agent::end'],
   }
 
   if $manage_firewall {
-    firewall { "101 allow agent-connections:$own_port":
+    firewall { "101 allow agent-connections:${own_port}":
       proto   => 'tcp',
       state   => ['NEW'],
       dport   => $own_port,
@@ -115,13 +115,13 @@ class teamcity::agent(
 
   # start the agent 
   exec { 'start agent':
-    command     => "$bin_dir/agent.sh start",
-    creates     => "$home/logs/buildAgent.pid",
-    require     => [
-       Service["$service"]
+    command => "${bin_dir}/agent.sh start",
+    creates => "${home}/logs/buildAgent.pid",
+    require => [
+      Service[$service]
     ],
-    before      => Anchor['teamcity::agent::end'],
-  }  
+    before  => Anchor['teamcity::agent::end'],
+  }
 
   anchor { 'teamcity::agent::end': }
 }

@@ -1,6 +1,7 @@
 class teamcity::server::config(
   $content
 ) {
+
   File {
     owner   => $teamcity::server::user,
     group   => $teamcity::common::group,
@@ -18,21 +19,21 @@ class teamcity::server::config(
       ensure => directory,
   }
   
-  file { "$teamcity::server::home_dir/conf/server.xml":
-      ensure  => present,
-      content => template('teamcity/server.xml.erb'),
-      mode    => '0644',
-      owner   => $teamcity::server::user,
-      group   => $teamcity::common::group,
+  file { "${teamcity::server::home_dir}/conf/server.xml":
+    ensure  => present,
+    content => template('teamcity/server.xml.erb'),
+    mode    => '0644',
+    owner   => $teamcity::server::user,
+    group   => $teamcity::common::group,
   }
 
-  file { "/etc/init.d/$teamcity::server::service":
+  file { "/etc/init.d/${teamcity::server::service}":
     ensure  => present,
     content => $content,
     mode    => '0755',
-    owner   => 'root',
-    group   => 'root',
+    owner   => root,
+    group   => root,
     notify  => Service[$teamcity::server::service],
-    require => File["$teamcity::server::home_dir/conf/server.xml"],
+    require => File["${teamcity::server::home_dir}/conf/server.xml"],
   }
 }

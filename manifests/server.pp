@@ -35,31 +35,31 @@ class teamcity::server(
   include teamcity::common
 
   user { $user:
-       ensure => present,
-       home   => $home_dir,
-       system => true,
-       gid    => $teamcity::common::group,
-       require => Class['teamcity::common'] 
+    ensure  => present,
+    home    => $home_dir,
+    system  => true,
+    gid     => $teamcity::common::group,
+    require => Class['teamcity::common']
   }
-  
-   exec { 'create teamcity data directories':
-       command   => "mkdir -p $data_dir/config/projects   $data_dir/lib/jdbc",
-       timeout   => 0, 
-       require   => User[$user],
-   } 
-   
-    exec { 'chown teamcity data directories':
-        command   => "chown -R $user:$teamcity::common::group  $data_dir/config  $data_dir/lib",
-        timeout   => 0, 
-        require   => Exec['create teamcity data directories'],
- }   
-  
+
+  exec { 'create teamcity data directories':
+    command => "mkdir -p ${data_dir}/config/projects   ${data_dir}/lib/jdbc",
+    timeout => 0,
+    require => User[$user],
+  }
+
+  exec { 'chown teamcity data directories':
+    command => "chown -R ${user}:${teamcity::common::group}  ${data_dir}/config  ${data_dir}/lib",
+    timeout => 0,
+    require => Exec['create teamcity data directories'],
+  }
+
   include teamcity::db
   contain teamcity::db
 
   class { 'teamcity::server::install':
     wget_opts => $wget_opts,
-    require => Exec['chown teamcity data directories'],
+    require   => Exec['chown teamcity data directories'],
   }
 
   class { 'teamcity::server::config':
@@ -79,7 +79,6 @@ class teamcity::server(
       User[$user],
       Group[$teamcity::common::group],
       Class['teamcity::server::config'],
-     
     ],
   }
 }

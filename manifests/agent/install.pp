@@ -1,15 +1,15 @@
 # A class for installing the agent from a TeamCity Server
 #
 class teamcity::agent::install(
-    $download_dir       = "/tmp",
+    $download_dir       = '/tmp',
 ) {
 
   exec { 'download teamcity agent':
-   command     => "wget \"${teamcity::agent::server_url}/update/buildAgent.zip\"",
-   creates     => "$download_dir/buildAgent.zip",
-   cwd         => "$download_dir",
-   timeout     => 0
-  } 
+    command => "wget \"${teamcity::agent::server_url}/update/buildAgent.zip\"",
+    creates => "${download_dir}/buildAgent.zip",
+    cwd     => $download_dir,
+    timeout => 0
+  }
 
   exec { 'unzip teamcity agent':
     command => "/usr/bin/unzip buildAgent.zip -d ${teamcity::agent::home}",
