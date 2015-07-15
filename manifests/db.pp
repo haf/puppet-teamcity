@@ -1,11 +1,13 @@
  # Configures the teamcity database
 class teamcity::db(
-  $manage_repos = true,
-  $username     = 'teamcity_server',
-  $password     = 'CHANGEME',
-  $host         = 'localhost',
-  $port         = 5432,
-  $db_name      = 'teamcity_server'
+  $manage_repos         = true,
+  $username             = 'teamcity_server',
+  $password             = 'CHANGEME',
+  $host                 = 'localhost',
+  $port                 = 5432,
+  $db_name              = 'teamcity_server',
+  $mysql_connector      = 'mysql-connector-java-5.1.33',
+  $postgresql_connector = 'postgresql-9.3-1103.jdbc41.jar'
 ){
   $db_file = "${teamcity::server::data_dir}/config/database.properties"
 
@@ -28,9 +30,9 @@ class teamcity::db(
       }
 
       # see http://confluence.jetbrains.com/display/TCD8/Setting+up+an+External+Database#SettingupanExternalDatabase-SelectingExternalDatabaseEngine
-      $jdbc_out = "${teamcity::server::data_dir}/lib/jdbc/postgresql-9.3-1101.jdbc41.jar"
+      $jdbc_out = "${teamcity::server::data_dir}/lib/jdbc/${postgresql_connector}"
       exec { 'download-jdbc41':
-        command => "curl http://jdbc.postgresql.org/download/postgresql-9.3-1101.jdbc41.jar --output ${jdbc_out}",
+        command => "curl http://jdbc.postgresql.org/download/${postgresql_connector} --output ${jdbc_out}",
         creates => $jdbc_out,
       }
 
@@ -69,7 +71,7 @@ testOnBorrow=false
       }
 
       # see http://confluence.jetbrains.com/display/TCD8/Setting+up+an+External+Database#SettingupanExternalDatabase-SelectingExternalDatabaseEngine
-      $mysql_connector = 'mysql-connector-java-5.1.33'
+      
       exec { "download-${mysql_connector}":
         command => "curl http://ftp.jaist.ac.jp/pub/mysql/Downloads/Connector-J/${mysql_connector}.tar.gz | tar -xvz   ${mysql_connector}/${mysql_connector}-bin.jar",
         cwd     => '/tmp',
