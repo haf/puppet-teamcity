@@ -93,6 +93,7 @@ class teamcity::agent(
     status     => 'ps aux | grep /usr/bin/java | grep AgentMain',
     hasstatus  => false,
     hasrestart => true,
+    provider   => 'init',
     require    => [
       Anchor['teamcity::agent::start'],
       Class['teamcity::common'],

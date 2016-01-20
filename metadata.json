@@ -1,6 +1,6 @@
 {
   "name": "neillturner-teamcity",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "source": "https://github.com/neillturner/puppet-teamcity.git",
   "author": "neillturner",
   "license": "ASL",
@@ -8,6 +8,32 @@
   "description": "Module to manage teamcity installations",
   "project_page": "https://github.com/neillturner/puppet-teamcity",
   "dependencies": [
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    }
   ],
   "types": [
   ]
