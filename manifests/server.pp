@@ -73,6 +73,7 @@ class teamcity::server(
     ensure     => running,
     enable     => true,
     hasstatus  => false,
+    provider   => 'init',
     status     => 'ps aux | grep /usr/bin/java | grep teamcity_logs',
     hasrestart => true,
     require    => [
